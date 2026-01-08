@@ -1,3 +1,6 @@
 node_modules
 .env
 assets/audios
+dist
+build
+public/audio

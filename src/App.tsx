@@ -50,7 +50,7 @@ export default function App() {
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isMusicOn, setIsMusicOn] = useState(false);
-  const bgMusic = "../assets/audios/background-music.mp3";
+  const bgMusic = "/audio/background-music.mp3";
 
   const floatingIcons = useMemo(() => {
     return generateDecorativeIcons();
