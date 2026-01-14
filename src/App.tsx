@@ -11,6 +11,7 @@ import { ResultModal } from "./components/ResultModal";
 import { WelcomeModal } from "./components/WelcomeModal";
 import { QuestionModal } from "./components/QuestionModal";
 import { LoadingModal } from "./components/LoadingModal";
+import { GameCutscene } from "./components/GameCutscene";
 import {
   distributeAmount,
   formatDifficultyBasedOnAmount,
@@ -32,10 +33,13 @@ export interface GameState {
   amounts: number[];
   openedEnvelopes: Set<number>;
   gameMode: GameMode;
+  minValue: number;
+  maxValue: number;
 }
 
 export default function App() {
   const [gameState, setGameState] = useState<GameState | null>(null);
+  const [showCutscene, setShowCutscene] = useState(false);
   const [selectedEnvelope, setSelectedEnvelope] = useState<{
     index: number;
     amount: number;
@@ -70,16 +74,28 @@ export default function App() {
   const handleCreateEnvelopes = (
     totalFund: number,
     numberOfPackets: number,
-    gameMode: GameMode
+    gameMode: GameMode,
+    minValue: number,
+    maxValue: number
   ) => {
-    const amounts = distributeAmount(totalFund, numberOfPackets);
+    const amounts = distributeAmount(
+      totalFund,
+      numberOfPackets,
+      minValue,
+      maxValue
+    );
     setGameState({
       totalFund,
       numberOfPackets,
       amounts,
       openedEnvelopes: new Set(),
       gameMode,
+      minValue,
+      maxValue,
     });
+
+    // Show cutscene after creating envelopes
+    setShowCutscene(true);
   };
 
   const handleEnvelopeClick = async (index: number) => {
@@ -193,9 +209,17 @@ export default function App() {
       {/* Welcome Modal */}
       {showWelcome && <WelcomeModal onEnter={handleWelcomeEnter} />}
 
+      {/* Game Cutscene */}
+      {showCutscene && gameState && (
+        <GameCutscene
+          numberOfPackets={gameState.numberOfPackets}
+          onComplete={() => setShowCutscene(false)}
+        />
+      )}
+
       {/* Main content */}
       <div className="relative z-50">
-        {!showWelcome && (
+        {!showWelcome && !showCutscene && (
           <>
             {!gameState ? (
               <SetupScreen onCreateEnvelopes={handleCreateEnvelopes} />

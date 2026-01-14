@@ -56,16 +56,39 @@ export function generateDecorativeIcons(): DecorativeIcon[] {
 }
 
 // Distribution algorithm
-export function distributeAmount(total: number, packets: number): number[] {
-  // Random distribution
+export function distributeAmount(
+  total: number,
+  packets: number,
+  minValue?: number,
+  maxValue?: number
+): number[] {
+  // Use provided min/max or calculate defaults
+  const min = minValue || Math.floor(total / packets / 10) || 1000;
+  const max = maxValue || total; // Default max is total if not specified
+
+  // Validate that distribution is possible
+  if (packets * min > total || packets * max < total) {
+    // Fallback to equal distribution if constraints can't be met
+    const equalAmount = Math.floor(total / packets);
+    const remainder = total % packets;
+    const amounts: number[] = Array(packets).fill(equalAmount);
+    // Distribute remainder across first few envelopes
+    for (let i = 0; i < remainder; i++) {
+      amounts[i]++;
+    }
+    return shuffleArray(amounts);
+  }
+
+  // Random distribution within min/max constraints
   const amounts: number[] = [];
   let remaining = total;
-  const minAmount = Math.floor(total / packets / 10) || 1000; // Minimum 10% of average or 1000 VNĐ
 
   for (let i = 0; i < packets - 1; i++) {
-    const maxPossible = remaining - minAmount * (packets - i - 1);
+    const minPossible = Math.max(min, remaining - max * (packets - i - 1));
+    const maxPossible = Math.min(max, remaining - min * (packets - i - 1));
+
     const randomAmount = Math.floor(
-      Math.random() * (maxPossible - minAmount + 1) + minAmount
+      Math.random() * (maxPossible - minPossible + 1) + minPossible
     );
     amounts.push(randomAmount);
     remaining -= randomAmount;

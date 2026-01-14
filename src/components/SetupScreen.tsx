@@ -5,7 +5,9 @@ interface SetupScreenProps {
   onCreateEnvelopes: (
     totalFund: number,
     numberOfPackets: number,
-    gameMode: GameMode
+    gameMode: GameMode,
+    minValue: number,
+    maxValue: number
   ) => void;
 }
 
@@ -13,6 +15,8 @@ export function SetupScreen({ onCreateEnvelopes }: SetupScreenProps) {
   const [totalFund, setTotalFund] = useState("500.000");
   const [numberOfPackets, setNumberOfPackets] = useState("5");
   const [gameMode, setGameMode] = useState<GameMode>("normal");
+  const [minValue, setMinValue] = useState("50.000");
+  const [maxValue, setMaxValue] = useState("200.000");
   const [error, setError] = useState("");
 
   const formatCurrency = (value: string): string => {
@@ -35,6 +39,8 @@ export function SetupScreen({ onCreateEnvelopes }: SetupScreenProps) {
 
     const fundAmount = parseInt(totalFund.replace(/\./g, ""));
     const packets = parseInt(numberOfPackets);
+    const min = parseInt(minValue.replace(/\./g, ""));
+    const max = parseInt(maxValue.replace(/\./g, ""));
 
     if (!fundAmount || fundAmount <= 0) {
       setError("Ủa alo? Nhập 'thóc' tử tế đi nào bạn ơi! 💸");
@@ -61,12 +67,40 @@ export function SetupScreen({ onCreateEnvelopes }: SetupScreenProps) {
       return;
     }
 
-    if (fundAmount < packets * 10000) {
-      setError("Lộc này 'mỏng' quá (ít nhất mỗi người phải được 10k)!");
+    if (!min || min <= 0) {
+      setError("Giá trị tối thiểu phải lớn hơn 0!");
       return;
     }
 
-    onCreateEnvelopes(fundAmount, packets, gameMode);
+    if (!max || max <= 0) {
+      setError("Giá trị tối đa phải lớn hơn 0!");
+      return;
+    }
+
+    if (min >= max) {
+      setError("Giá trị tối thiểu phải nhỏ hơn giá trị tối đa!");
+      return;
+    }
+
+    if (fundAmount < packets * min) {
+      setError(
+        `Tổng tiền không đủ! Cần ít nhất ${
+          packets * min
+        } VNĐ (${packets} x ${min})`
+      );
+      return;
+    }
+
+    if (fundAmount > packets * max) {
+      setError(
+        `Tổng tiền quá nhiều! Tối đa chỉ được ${
+          packets * max
+        } VNĐ (${packets} x ${max})`
+      );
+      return;
+    }
+
+    onCreateEnvelopes(fundAmount, packets, gameMode, min, max);
   };
 
   return (
@@ -113,6 +147,42 @@ export function SetupScreen({ onCreateEnvelopes }: SetupScreenProps) {
                   setError("");
                 }}
                 placeholder="10"
+                className="w-full px-4 py-3 text-xl border-2 border-gray-300 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition font-montserrat"
+              />
+            </div>
+
+            {/* Min Value */}
+            <div>
+              <label className="block text-lg font-montserrat text-gray-700 mb-2">
+                Giá trị tối thiểu (VNĐ) 📉
+              </label>
+              <input
+                type="text"
+                value={minValue}
+                onChange={(e) => {
+                  const formatted = formatCurrency(e.target.value);
+                  setMinValue(formatted);
+                  setError("");
+                }}
+                placeholder="50.000"
+                className="w-full px-4 py-3 text-xl border-2 border-gray-300 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition font-montserrat"
+              />
+            </div>
+
+            {/* Max Value */}
+            <div>
+              <label className="block text-lg font-montserrat text-gray-700 mb-2">
+                Giá trị tối đa (VNĐ) 📈
+              </label>
+              <input
+                type="text"
+                value={maxValue}
+                onChange={(e) => {
+                  const formatted = formatCurrency(e.target.value);
+                  setMaxValue(formatted);
+                  setError("");
+                }}
+                placeholder="200.000"
                 className="w-full px-4 py-3 text-xl border-2 border-gray-300 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition font-montserrat"
               />
             </div>

@@ -1553,6 +1553,95 @@ html {
   }
 }
 
+/* Cutscene Animations */
+@keyframes fly-in-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-200px) rotate(-45deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg);
+  }
+}
+
+@keyframes fly-in-right {
+  0% {
+    opacity: 0;
+    transform: translateX(200px) rotate(45deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg);
+  }
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(20deg);
+  }
+
+  75% {
+    transform: rotate(-20deg);
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(50px);
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes fade-in-scale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fly-in-left {
+  animation: 1s ease-out fly-in-left;
+}
+
+.animate-fly-in-right {
+  animation: 1s ease-out fly-in-right;
+}
+
+.animate-wave {
+  animation: 0.8s ease-in-out infinite wave;
+  transform-origin: bottom;
+}
+
+.animate-bounce-in {
+  animation: 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) bounce-in;
+}
+
+.animate-fade-in-scale {
+  animation: 0.6s ease-out fade-in-scale;
+}
+
 @property --tw-scale-x {
   syntax: "*";
   inherits: false;

@@ -3,10 +3,11 @@ import React from "react";
 interface EnvelopeProps {
   index: number;
   isOpened: boolean;
+  amount: number;
   onClick: () => void;
 }
 
-export function Envelope({ index, isOpened, onClick }: EnvelopeProps) {
+export function Envelope({ index, isOpened, amount, onClick }: EnvelopeProps) {
   return (
     <button
       onClick={onClick}
@@ -46,7 +47,14 @@ export function Envelope({ index, isOpened, onClick }: EnvelopeProps) {
               </div>
             </>
           )}
-          {isOpened && <div className="text-2xl md:text-4xl">✓</div>}
+          {isOpened && (
+            <div className="flex flex-col items-center gap-2">
+              <div className="text-2xl md:text-4xl">✓</div>
+              <div className="font-playfair text-yellow-400 text-lg md:text-xl font-bold text-center break-words px-1">
+                {formatCurrency(amount)} VNĐ
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Gold border pattern */}
@@ -61,4 +69,8 @@ export function Envelope({ index, isOpened, onClick }: EnvelopeProps) {
       </div>
     </button>
   );
+}
+
+function formatCurrency(amount: number): string {
+  return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
