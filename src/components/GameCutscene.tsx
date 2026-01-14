@@ -1,4 +1,4 @@
-npmimport React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface GameCutsceneProps {
   numberOfPackets: number;
