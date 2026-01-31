@@ -60,40 +60,59 @@ export function distributeAmount(
   total: number,
   packets: number,
   minValue?: number,
-  maxValue?: number
+  maxValue?: number,
 ): number[] {
-  // Use provided min/max or calculate defaults
-  const min = minValue || Math.floor(total / packets / 10) || 1000;
-  const max = maxValue || total; // Default max is total if not specified
+  // Round to nearest multiple of 1000
+  const roundToThousand = (value: number): number => Math.round(value / 1000) * 1000;
 
+  // Use provided min/max or calculate defaults, rounded to multiples of 1000
+  const min = roundToThousand(minValue || Math.floor(total / packets / 1000) || 1000);
+  const max = roundToThousand(maxValue || total);
   // Validate that distribution is possible
-  if (packets * min > total || packets * max < total) {
+  if (packets < 2 || packets * min > total || packets * max < total) {
     // Fallback to equal distribution if constraints can't be met
-    const equalAmount = Math.floor(total / packets);
-    const remainder = total % packets;
+    const equalAmount = roundToThousand(total / packets);
     const amounts: number[] = Array(packets).fill(equalAmount);
+    const remainder = total - equalAmount * packets;
     // Distribute remainder across first few envelopes
-    for (let i = 0; i < remainder; i++) {
-      amounts[i]++;
+    for (let i = 0; i < Math.abs(remainder) / 1000; i++) {
+      amounts[i] += remainder > 0 ? 1000 : -1000;
     }
     return shuffleArray(amounts);
   }
 
-  // Random distribution within min/max constraints
   const amounts: number[] = [];
-  let remaining = total;
 
-  for (let i = 0; i < packets - 1; i++) {
-    const minPossible = Math.max(min, remaining - max * (packets - i - 1));
-    const maxPossible = Math.min(max, remaining - min * (packets - i - 1));
+  // Guarantee at least one min and one max value
+  amounts.push(min);
+  amounts.push(max);
+  let remaining = total - min - max;
 
-    const randomAmount = Math.floor(
-      Math.random() * (maxPossible - minPossible + 1) + minPossible
+  // Distribute the rest among remaining packets
+  for (let i = 0; i < packets - 3; i++) {
+    const minPossible = Math.max(min, remaining - max * (packets - i - 3));
+    const maxPossible = Math.min(max, remaining - min * (packets - i - 3));
+
+    const randomAmount = roundToThousand(
+      Math.random() * (maxPossible - minPossible) + minPossible,
     );
     amounts.push(randomAmount);
     remaining -= randomAmount;
   }
-  amounts.push(remaining); // Last packet gets the remainder
+
+  // Last packet gets the remainder, rounded to multiple of 1000
+  const lastAmount = roundToThousand(remaining);
+  amounts.push(lastAmount);
+
+  // Adjust if rounding caused discrepancy
+  const currentTotal = amounts.reduce((sum, val) => sum + val, 0);
+  const diff = total - currentTotal;
+  if (diff !== 0) {
+    // Add the difference to a random envelope (not min or max)
+    const adjustIndex = Math.floor(Math.random() * (packets - 2)) + 2;
+    amounts[adjustIndex] += diff;
+    amounts[adjustIndex] = roundToThousand(amounts[adjustIndex]);
+  }
 
   // Shuffle to randomize positions
   return shuffleArray(amounts);
@@ -110,7 +129,7 @@ function shuffleArray<T>(array: T[]): T[] {
 
 export function formatDifficultyBasedOnAmount(
   amount: number,
-  totalFund: number
+  totalFund: number,
 ): string {
   const percentage = (amount / totalFund) * 100;
   if (percentage < 20) {
@@ -125,7 +144,7 @@ export function formatDifficultyBasedOnAmount(
 // Redistribute amounts across unopened envelopes, preserving opened ones.
 export function redistributeUnopened(
   amounts: number[],
-  openedIndices: Set<number>
+  openedIndices: Set<number>,
 ): number[] {
   const newAmounts = [...amounts];
   const unopenedIndices: number[] = [];
@@ -142,12 +161,12 @@ export function redistributeUnopened(
 
   const remainingTotal = unopenedIndices.reduce(
     (sum, idx) => sum + amounts[idx],
-    0
+    0,
   );
 
   const redistributed = distributeAmount(
     remainingTotal,
-    unopenedIndices.length
+    unopenedIndices.length,
   );
 
   unopenedIndices.forEach((idx, k) => {

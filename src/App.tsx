@@ -12,6 +12,7 @@ import { WelcomeModal } from "./components/WelcomeModal";
 import { QuestionModal } from "./components/QuestionModal";
 import { LoadingModal } from "./components/LoadingModal";
 import { GameCutscene } from "./components/GameCutscene";
+import { GameStatsScreen } from "./components/GameStatsScreen";
 import {
   distributeAmount,
   formatDifficultyBasedOnAmount,
@@ -19,6 +20,13 @@ import {
   redistributeUnopened,
 } from "./utils";
 import { generateTetQuestion, questionType, test } from "./service/gemini";
+import {
+  createInitialStats,
+  GameStats,
+  getAchievements,
+  saveToLeaderboard,
+} from "./utils/achievements";
+import { playSound } from "./utils/audio";
 
 export type GameMode = "normal" | "challenge";
 
@@ -35,11 +43,16 @@ export interface GameState {
   gameMode: GameMode;
   minValue: number;
   maxValue: number;
+  gameStarted: boolean;
+  streak: number;
+  longestStreak: number;
 }
 
 export default function App() {
   const [gameState, setGameState] = useState<GameState | null>(null);
+  const [gameStats, setGameStats] = useState<GameStats>(createInitialStats());
   const [showCutscene, setShowCutscene] = useState(false);
+  const [showGameStats, setShowGameStats] = useState(false);
   const [selectedEnvelope, setSelectedEnvelope] = useState<{
     index: number;
     amount: number;
@@ -76,15 +89,15 @@ export default function App() {
     numberOfPackets: number,
     gameMode: GameMode,
     minValue: number,
-    maxValue: number
+    maxValue: number,
   ) => {
     const amounts = distributeAmount(
       totalFund,
       numberOfPackets,
       minValue,
-      maxValue
+      maxValue,
     );
-    setGameState({
+    const newGameState: GameState = {
       totalFund,
       numberOfPackets,
       amounts,
@@ -92,14 +105,26 @@ export default function App() {
       gameMode,
       minValue,
       maxValue,
-    });
+      gameStarted: false,
+      streak: 0,
+      longestStreak: 0,
+    };
+    setGameState(newGameState);
+
+    // Reset game stats
+    setGameStats(createInitialStats());
 
     // Show cutscene after creating envelopes
     setShowCutscene(true);
   };
 
   const handleEnvelopeClick = async (index: number) => {
-    if (!gameState || gameState.openedEnvelopes.has(index)) return;
+    if (
+      !gameState ||
+      gameState.openedEnvelopes.has(index) ||
+      !gameState.gameStarted
+    )
+      return;
 
     const amount = gameState.amounts[index];
 
@@ -107,14 +132,13 @@ export default function App() {
     if (gameState.gameMode === "challenge") {
       const questionLevel = formatDifficultyBasedOnAmount(
         amount,
-        gameState.totalFund
+        gameState.totalFund,
       );
 
       setIsLoadingQuestion(true);
       try {
-        const quizPromise: questionType = await generateTetQuestion(
-          questionLevel
-        );
+        const quizPromise: questionType =
+          await generateTetQuestion(questionLevel);
 
         console.log("Question level:", questionLevel);
         console.log("Quiz promise:", quizPromise);
@@ -134,7 +158,30 @@ export default function App() {
       // Normal mode: directly open the envelope
       const newOpenedEnvelopes = new Set(gameState.openedEnvelopes);
       newOpenedEnvelopes.add(index);
-      setGameState({ ...gameState, openedEnvelopes: newOpenedEnvelopes });
+      playSound("envelope-open");
+
+      // Update stats
+      const amountWon = amount;
+      const newStats = { ...gameStats };
+      newStats.totalWon += amountWon;
+
+      if (!newStats.bestEnvelope || amountWon > newStats.bestEnvelope.amount) {
+        newStats.bestEnvelope = { amount: amountWon, index };
+      }
+      if (
+        !newStats.worstEnvelope ||
+        amountWon < newStats.worstEnvelope.amount
+      ) {
+        newStats.worstEnvelope = { amount: amountWon, index };
+      }
+
+      setGameStats(newStats);
+
+      setGameState({
+        ...gameState,
+        openedEnvelopes: newOpenedEnvelopes,
+        gameStarted: true,
+      });
 
       setSelectedEnvelope({ index, amount });
     }
@@ -148,10 +195,59 @@ export default function App() {
     if (!currentQuestion || !gameState) return;
 
     if (isCorrect) {
+      playSound("correct-answer");
+
       // Mark envelope as opened
       const newOpenedEnvelopes = new Set(gameState.openedEnvelopes);
       newOpenedEnvelopes.add(currentQuestion.envelopeIndex);
-      setGameState({ ...gameState, openedEnvelopes: newOpenedEnvelopes });
+
+      // Update streak and stats
+      const newStreak = gameState.streak + 1;
+      const newLongestStreak = Math.max(newStreak, gameState.longestStreak);
+
+      const newStats = { ...gameStats };
+      newStats.totalWon += currentQuestion.envelopeAmount;
+      newStats.totalChallenges += 1;
+      newStats.correctAnswers += 1;
+      newStats.longestStreak = newLongestStreak;
+
+      if (
+        !newStats.bestEnvelope ||
+        currentQuestion.envelopeAmount > newStats.bestEnvelope.amount
+      ) {
+        newStats.bestEnvelope = {
+          amount: currentQuestion.envelopeAmount,
+          index: currentQuestion.envelopeIndex,
+        };
+      }
+      if (
+        !newStats.worstEnvelope ||
+        currentQuestion.envelopeAmount < newStats.worstEnvelope.amount
+      ) {
+        newStats.worstEnvelope = {
+          amount: currentQuestion.envelopeAmount,
+          index: currentQuestion.envelopeIndex,
+        };
+      }
+
+      setGameStats(newStats);
+
+      // Play different sounds based on amount
+      if (currentQuestion.envelopeAmount >= gameState.totalFund * 0.3) {
+        playSound("jackpot");
+      } else if (currentQuestion.envelopeAmount >= gameState.totalFund * 0.15) {
+        playSound("success");
+      } else {
+        playSound("small-win");
+      }
+
+      setGameState({
+        ...gameState,
+        openedEnvelopes: newOpenedEnvelopes,
+        gameStarted: true,
+        streak: newStreak,
+        longestStreak: newLongestStreak,
+      });
 
       // Show the result modal
       setSelectedEnvelope({
@@ -159,12 +255,24 @@ export default function App() {
         amount: currentQuestion.envelopeAmount,
       });
     } else {
+      playSound("fail");
+
       // Wrong answer: redistribute amounts among unopened envelopes
       const redistributed = redistributeUnopened(
         gameState.amounts,
-        gameState.openedEnvelopes
+        gameState.openedEnvelopes,
       );
-      setGameState({ ...gameState, amounts: redistributed });
+
+      const newStats = { ...gameStats };
+      newStats.totalChallenges += 1;
+      setGameStats(newStats);
+
+      setGameState({
+        ...gameState,
+        amounts: redistributed,
+        gameStarted: true,
+        streak: 0, // Reset streak on wrong answer
+      });
     }
 
     // Close the question modal
@@ -172,8 +280,25 @@ export default function App() {
   };
 
   const handleReset = () => {
-    setGameState(null);
-    setSelectedEnvelope(null);
+    // Save stats to leaderboard if in challenge mode
+    if (gameState && gameState.gameMode === "challenge") {
+      const finalStats = {
+        ...gameStats,
+        achievements: getAchievements(
+          gameStats.totalWon,
+          gameStats.correctAnswers,
+          gameStats.totalChallenges,
+          gameStats.longestStreak,
+          gameStats.bestEnvelope?.amount || 0,
+          gameState.totalFund,
+        ),
+      };
+      saveToLeaderboard(finalStats);
+      setShowGameStats(true);
+    } else {
+      setGameState(null);
+      setSelectedEnvelope(null);
+    }
   };
 
   const handleWelcomeEnter = async () => {
@@ -228,6 +353,19 @@ export default function App() {
                 gameState={gameState}
                 onEnvelopeClick={handleEnvelopeClick}
                 onReset={handleReset}
+                onStartGame={() => {
+                  if (gameState) {
+                    // Shuffle amounts
+                    const shuffled = [...gameState.amounts].sort(
+                      () => Math.random() - 0.5,
+                    );
+                    setGameState({
+                      ...gameState,
+                      amounts: shuffled,
+                      gameStarted: true,
+                    });
+                  }
+                }}
               />
             )}
           </>
@@ -262,6 +400,18 @@ export default function App() {
         <ResultModal
           amount={selectedEnvelope.amount}
           onClose={handleCloseModal}
+        />
+      )}
+
+      {/* Game Stats Screen */}
+      {showGameStats && gameState && (
+        <GameStatsScreen
+          stats={gameStats}
+          onPlayAgain={() => {
+            setShowGameStats(false);
+            setGameState(null);
+            setSelectedEnvelope(null);
+          }}
         />
       )}
     </div>

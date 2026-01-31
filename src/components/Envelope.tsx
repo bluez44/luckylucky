@@ -1,16 +1,43 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
+import gsap from "gsap";
 
 interface EnvelopeProps {
   index: number;
   isOpened: boolean;
   amount: number;
   onClick: () => void;
+  showValue?: boolean;
+  totalFund?: number;
 }
 
-export function Envelope({ index, isOpened, amount, onClick }: EnvelopeProps) {
+export function Envelope({
+  index,
+  isOpened,
+  amount,
+  onClick,
+  showValue = false,
+  totalFund = 0,
+}: EnvelopeProps) {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
+
+  const handleClick = () => {
+    onClick();
+  };
+
+  // Get difficulty level
+  const getDifficultyStars = (amt: number): string => {
+    if (totalFund === 0) return "";
+    const percentage = (amt / totalFund) * 100;
+    if (percentage < 15) return "⭐";
+    if (percentage < 30) return "⭐⭐";
+    return "⭐⭐⭐";
+  };
+
   return (
     <button
-      onClick={onClick}
+      ref={buttonRef}
+      onClick={handleClick}
       disabled={isOpened}
       className={`
         relative aspect-3/4 w-full rounded-lg transition-all duration-300
@@ -22,9 +49,16 @@ export function Envelope({ index, isOpened, amount, onClick }: EnvelopeProps) {
         border-4 shadow-xl
         ${isOpened ? "border-gray-500" : "border-yellow-500"}
       `}
+      style={{
+        perspective: "1000px",
+        transformStyle: "preserve-3d" as any,
+      }}
     >
       {/* Envelope decoration */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center p-2">
+      <div
+        ref={innerRef}
+        className="absolute inset-0 flex flex-col items-center justify-center p-2"
+      >
         {/* Top flap */}
         <div
           className={`absolute top-0 left-0 right-0 h-1/4 ${
@@ -37,7 +71,7 @@ export function Envelope({ index, isOpened, amount, onClick }: EnvelopeProps) {
 
         {/* Center decoration */}
         <div className="relative z-10 flex flex-col items-center justify-center h-full">
-          {!isOpened && (
+          {!isOpened && !showValue && (
             <>
               {/* Ornament */}
               <div className="text-3xl md:text-5xl mb-2">🧧</div>
@@ -47,10 +81,24 @@ export function Envelope({ index, isOpened, amount, onClick }: EnvelopeProps) {
               </div>
             </>
           )}
+          {!isOpened && showValue && (
+            <div className="flex flex-col items-center gap-2">
+              {/* Ornament */}
+              <div className="text-3xl md:text-5xl mb-2">🧧</div>
+              {/* Amount */}
+              <div className="font-playfair text-yellow-400 text-sm md:text-base font-bold text-center wrap-break-word px-1">
+                {formatCurrency(amount)} VNĐ
+              </div>
+              {/* Difficulty Stars */}
+              {totalFund > 0 && (
+                <div className="text-lg mt-2">{getDifficultyStars(amount)}</div>
+              )}
+            </div>
+          )}
           {isOpened && (
             <div className="flex flex-col items-center gap-2">
               <div className="text-2xl md:text-4xl">✓</div>
-              <div className="font-playfair text-yellow-400 text-lg md:text-xl font-bold text-center break-words px-1">
+              <div className="font-playfair text-yellow-400 text-lg md:text-xl font-bold text-center wrap-break-word px-1">
                 {formatCurrency(amount)} VNĐ
               </div>
             </div>
