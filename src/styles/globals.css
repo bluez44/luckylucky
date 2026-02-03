@@ -1,7 +1,5 @@
 @custom-variant dark (&:is(.dark *));
 
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;500;600;700&display=swap");
-
 :root {
   --font-size: 16px;
   --background: #ffffff;
@@ -41,6 +39,80 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* ===== APP THEME COLORS ===== */
+
+  /* Envelope/Card Colors - Main accent theme */
+  --theme-envelope: #dc2626; /* red-600 - Primary envelope color */
+  --theme-envelope-dark: #b91c1c; /* red-700 - Darker envelope shade */
+  --theme-envelope-darker: #991b1b; /* red-800 - Darkest envelope/flap */
+  --theme-envelope-disabled: #9ca3af; /* gray-400 - Opened/disabled state */
+
+  /* Gold/Accent Colors - For borders, decorations, highlights */
+  --theme-accent: #facc15; /* yellow-400 - Primary accent color */
+  --theme-accent-dark: #eab308; /* yellow-500 - Darker accent */
+  --theme-accent-darker: #ca8a04; /* yellow-600 - Darkest accent */
+  --theme-accent-light: #fef08a; /* yellow-200 - Light accent */
+  --theme-accent-lighter: #fef9c3; /* yellow-100 - Lightest accent */
+
+  /* Background Colors - For page backgrounds and gradients */
+  --theme-bg-primary: #b91c1c; /* red-700 - Main background */
+  --theme-bg-secondary: #dc2626; /* red-600 - Secondary background */
+  --theme-bg-dark: #991b1b; /* red-800 - Dark background accent */
+
+  /* Modal/Card Colors */
+  --theme-modal-bg: rgba(255, 255, 255, 0.95); /* White with transparency */
+  --theme-modal-overlay: rgba(0, 0, 0, 0.5); /* Dark overlay */
+  --theme-modal-overlay-dark: rgba(0, 0, 0, 0.6); /* Darker overlay */
+
+  /* Text Colors */
+  --theme-text-primary: #b91c1c; /* red-700 - Primary text on light bg */
+  --theme-text-dark: #991b1b; /* red-800 - Dark text */
+  --theme-text-accent: #facc15; /* yellow-400 - Accent text on dark bg */
+  --theme-text-accent-light: #fef08a; /* yellow-200 - Light accent text */
+  --theme-text-muted: #6b7280; /* gray-500 - Muted text */
+  --theme-text-secondary: #374151; /* gray-700 - Secondary text (labels) */
+  --theme-text-body: #4b5563; /* gray-600 - Body text */
+  --theme-text-heading: #1f2937; /* gray-800 - Heading text */
+  --theme-text-on-accent: #1f2937; /* gray-800 - Text on accent backgrounds */
+  --theme-text-success: #166534; /* green-800 - Success text */
+  --theme-text-warning: #9a3412; /* orange-800 - Warning text */
+
+  /* Card/Surface Colors */
+  --theme-card-bg: #ffffff; /* white - Card background */
+  --theme-card-bg-alt: #fef3c7; /* amber-100 - Alternative card bg */
+  --theme-card-bg-success: #dcfce7; /* green-100 - Success card bg */
+  --theme-card-bg-warning: #ffedd5; /* orange-100 - Warning card bg */
+  --theme-card-border-success: #22c55e; /* green-500 */
+  --theme-card-border-warning: #f97316; /* orange-500 */
+
+  /* Input Colors */
+  --theme-input-bg: #ffffff; /* white */
+  --theme-input-border: #d1d5db; /* gray-300 */
+  --theme-input-text: #1f2937; /* gray-800 */
+
+  /* Button Colors */
+  --theme-btn-primary: #dc2626; /* red-600 - Primary button */
+  --theme-btn-primary-hover: #b91c1c; /* red-700 - Primary button hover */
+  --theme-btn-accent: #eab308; /* yellow-500 - Accent button */
+  --theme-btn-accent-hover: #ca8a04; /* yellow-600 - Accent button hover */
+
+  /* Status Colors */
+  --theme-success: #16a34a; /* green-600 - Success state */
+  --theme-success-light: #dcfce7; /* green-100 - Success background */
+  --theme-error: #dc2626; /* red-600 - Error state */
+  --theme-error-light: #fee2e2; /* red-100 - Error background */
+
+  /* Border Colors */
+  --theme-border-accent: #eab308; /* yellow-500 - Accent border */
+  --theme-border-primary: #eab308; /* yellow-500 - Primary border */
+  --theme-border-disabled: #6b7280; /* gray-500 - Disabled border */
+
+  /* Celebration/Confetti Colors */
+  --theme-celebration-gold: #ffd700;
+  --theme-celebration-orange: #ffa500;
+  --theme-celebration-red: #ff6347;
+  --theme-celebration-pink: #ff1493;
 }
 
 .dark {
@@ -78,6 +150,80 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+
+  /* ===== DARK MODE APP THEME COLORS ===== */
+
+  /* Envelope/Card Colors - Darker, more muted red for dark mode */
+  --theme-envelope: #991b1b; /* red-800 */
+  --theme-envelope-dark: #7f1d1d; /* red-900 */
+  --theme-envelope-darker: #450a0a; /* red-950 */
+  --theme-envelope-disabled: #6b7280; /* gray-500 */
+
+  /* Gold/Accent Colors - Slightly muted gold for dark mode */
+  --theme-accent: #eab308; /* yellow-500 */
+  --theme-accent-dark: #ca8a04; /* yellow-600 */
+  --theme-accent-darker: #a16207; /* yellow-700 */
+  --theme-accent-light: #facc15; /* yellow-400 */
+  --theme-accent-lighter: #fef08a; /* yellow-200 */
+
+  /* Background Colors - Dark backgrounds */
+  --theme-bg-primary: #1f2937; /* gray-800 */
+  --theme-bg-secondary: #111827; /* gray-900 */
+  --theme-bg-dark: #030712; /* gray-950 */
+
+  /* Modal/Card Colors - Dark modal backgrounds */
+  --theme-modal-bg: rgba(31, 41, 55, 0.95); /* gray-800 with transparency */
+  --theme-modal-overlay: rgba(0, 0, 0, 0.7);
+  --theme-modal-overlay-dark: rgba(0, 0, 0, 0.8);
+
+  /* Text Colors - Light text for dark mode */
+  --theme-text-primary: #fef08a; /* yellow-200 */
+  --theme-text-dark: #facc15; /* yellow-400 */
+  --theme-text-accent: #fef08a; /* yellow-200 */
+  --theme-text-accent-light: #fef9c3; /* yellow-100 */
+  --theme-text-muted: #9ca3af; /* gray-400 */
+  --theme-text-secondary: #d1d5db; /* gray-300 - Secondary text (labels) */
+  --theme-text-body: #9ca3af; /* gray-400 - Body text */
+  --theme-text-heading: #f3f4f6; /* gray-100 - Heading text */
+  --theme-text-on-accent: #1f2937; /* gray-800 - Text on accent backgrounds */
+  --theme-text-success: #86efac; /* green-300 - Success text */
+  --theme-text-warning: #fdba74; /* orange-300 - Warning text */
+
+  /* Card/Surface Colors - Dark mode */
+  --theme-card-bg: #1f2937; /* gray-800 - Card background */
+  --theme-card-bg-alt: #374151; /* gray-700 - Alternative card bg */
+  --theme-card-bg-success: #14532d; /* green-900 - Success card bg */
+  --theme-card-bg-warning: #7c2d12; /* orange-900 - Warning card bg */
+  --theme-card-border-success: #22c55e; /* green-500 */
+  --theme-card-border-warning: #f97316; /* orange-500 */
+
+  /* Input Colors - Dark mode */
+  --theme-input-bg: #374151; /* gray-700 */
+  --theme-input-border: #4b5563; /* gray-600 */
+  --theme-input-text: #f3f4f6; /* gray-100 */
+
+  /* Button Colors - Adjusted for dark mode */
+  --theme-btn-primary: #991b1b; /* red-800 */
+  --theme-btn-primary-hover: #b91c1c; /* red-700 */
+  --theme-btn-accent: #ca8a04; /* yellow-600 */
+  --theme-btn-accent-hover: #eab308; /* yellow-500 */
+
+  /* Status Colors */
+  --theme-success: #22c55e; /* green-500 */
+  --theme-success-light: #166534; /* green-800 */
+  --theme-error: #ef4444; /* red-500 */
+  --theme-error-light: #7f1d1d; /* red-900 */
+
+  /* Border Colors */
+  --theme-border-accent: #ca8a04; /* yellow-600 */
+  --theme-border-primary: #ca8a04; /* yellow-600 */
+  --theme-border-disabled: #4b5563; /* gray-600 */
+
+  /* Celebration/Confetti Colors - Same vibrant colors */
+  --theme-celebration-gold: #ffd700;
+  --theme-celebration-orange: #ffa500;
+  --theme-celebration-red: #ff6347;
+  --theme-celebration-pink: #ff1493;
 }
 
 @theme inline {
@@ -119,6 +265,80 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* ===== APP TAILWIND THEME COLORS ===== */
+
+  /* Envelope Colors - Use: bg-theme-envelope, text-theme-envelope, etc. */
+  --color-theme-envelope: var(--theme-envelope);
+  --color-theme-envelope-dark: var(--theme-envelope-dark);
+  --color-theme-envelope-darker: var(--theme-envelope-darker);
+  --color-theme-envelope-disabled: var(--theme-envelope-disabled);
+
+  /* Accent Colors - Use: bg-theme-accent, text-theme-accent, border-theme-accent, etc. */
+  --color-theme-accent: var(--theme-accent);
+  --color-theme-accent-dark: var(--theme-accent-dark);
+  --color-theme-accent-darker: var(--theme-accent-darker);
+  --color-theme-accent-light: var(--theme-accent-light);
+  --color-theme-accent-lighter: var(--theme-accent-lighter);
+
+  /* Background Colors - Use: bg-theme-bg-primary, bg-theme-bg-secondary, etc. */
+  --color-theme-bg-primary: var(--theme-bg-primary);
+  --color-theme-bg-secondary: var(--theme-bg-secondary);
+  --color-theme-bg-dark: var(--theme-bg-dark);
+
+  /* Modal/Overlay Colors - Use: bg-theme-modal-bg, bg-theme-modal-overlay, etc. */
+  --color-theme-modal-bg: var(--theme-modal-bg);
+  --color-theme-modal-overlay: var(--theme-modal-overlay);
+  --color-theme-modal-overlay-dark: var(--theme-modal-overlay-dark);
+
+  /* Text Colors - Use: text-theme-text-primary, text-theme-text-accent, etc. */
+  --color-theme-text-primary: var(--theme-text-primary);
+  --color-theme-text-dark: var(--theme-text-dark);
+  --color-theme-text-accent: var(--theme-text-accent);
+  --color-theme-text-accent-light: var(--theme-text-accent-light);
+  --color-theme-text-muted: var(--theme-text-muted);
+  --color-theme-text-secondary: var(--theme-text-secondary);
+  --color-theme-text-body: var(--theme-text-body);
+  --color-theme-text-heading: var(--theme-text-heading);
+  --color-theme-text-on-accent: var(--theme-text-on-accent);
+  --color-theme-text-success: var(--theme-text-success);
+  --color-theme-text-warning: var(--theme-text-warning);
+
+  /* Card/Surface Colors - Use: bg-theme-card-bg, etc. */
+  --color-theme-card-bg: var(--theme-card-bg);
+  --color-theme-card-bg-alt: var(--theme-card-bg-alt);
+  --color-theme-card-bg-success: var(--theme-card-bg-success);
+  --color-theme-card-bg-warning: var(--theme-card-bg-warning);
+  --color-theme-card-border-success: var(--theme-card-border-success);
+  --color-theme-card-border-warning: var(--theme-card-border-warning);
+
+  /* Input Colors - Use: bg-theme-input-bg, border-theme-input-border, etc. */
+  --color-theme-input-bg: var(--theme-input-bg);
+  --color-theme-input-border: var(--theme-input-border);
+  --color-theme-input-text: var(--theme-input-text);
+
+  /* Button Colors - Use: bg-theme-btn-primary, hover:bg-theme-btn-primary-hover, etc. */
+  --color-theme-btn-primary: var(--theme-btn-primary);
+  --color-theme-btn-primary-hover: var(--theme-btn-primary-hover);
+  --color-theme-btn-accent: var(--theme-btn-accent);
+  --color-theme-btn-accent-hover: var(--theme-btn-accent-hover);
+
+  /* Status Colors - Use: bg-theme-success, bg-theme-error, etc. */
+  --color-theme-success: var(--theme-success);
+  --color-theme-success-light: var(--theme-success-light);
+  --color-theme-error: var(--theme-error);
+  --color-theme-error-light: var(--theme-error-light);
+
+  /* Border Colors - Use: border-theme-border-accent, border-theme-border-primary, etc. */
+  --color-theme-border-accent: var(--theme-border-accent);
+  --color-theme-border-primary: var(--theme-border-primary);
+  --color-theme-border-disabled: var(--theme-border-disabled);
+
+  /* Celebration Colors - Use: bg-theme-celebration-gold, etc. */
+  --color-theme-celebration-gold: var(--theme-celebration-gold);
+  --color-theme-celebration-orange: var(--theme-celebration-orange);
+  --color-theme-celebration-red: var(--theme-celebration-red);
+  --color-theme-celebration-pink: var(--theme-celebration-pink);
 }
 
 @layer base {

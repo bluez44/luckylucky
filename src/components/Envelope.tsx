@@ -1,5 +1,4 @@
-import React, { useRef, useEffect } from "react";
-import gsap from "gsap";
+import { useRef } from "react";
 
 interface EnvelopeProps {
   index: number;
@@ -43,11 +42,11 @@ export function Envelope({
         relative aspect-3/4 w-full rounded-lg transition-all duration-300
         ${
           isOpened
-            ? "opacity-40 cursor-not-allowed scale-95 bg-gray-400"
-            : "cursor-pointer hover:scale-110 hover:rotate-2 hover:shadow-2xl animate-envelope-shake-on-hover bg-linear-to-b from-red-600 to-red-700"
+            ? "opacity-40 cursor-not-allowed scale-95 bg-theme-envelope-disabled"
+            : "cursor-pointer hover:scale-110 hover:rotate-2 hover:shadow-2xl animate-envelope-shake-on-hover bg-linear-to-b from-theme-envelope to-theme-envelope-dark"
         }
         border-4 shadow-xl
-        ${isOpened ? "border-gray-500" : "border-yellow-500"}
+        ${isOpened ? "border-theme-border-disabled" : "border-theme-border-accent"}
       `}
       style={{
         perspective: "1000px",
@@ -62,7 +61,7 @@ export function Envelope({
         {/* Top flap */}
         <div
           className={`absolute top-0 left-0 right-0 h-1/4 ${
-            isOpened ? "bg-gray-500" : "bg-red-800"
+            isOpened ? "bg-theme-border-disabled" : "bg-theme-envelope-darker"
           } rounded-t-lg`}
           style={{
             clipPath: "polygon(0 0, 100% 0, 50% 100%)",
@@ -74,9 +73,9 @@ export function Envelope({
           {!isOpened && !showValue && (
             <>
               {/* Ornament */}
-              <div className="text-3xl md:text-5xl mb-2">🧧</div>
+              {/* <div className="text-3xl md:text-5xl mb-2">🏮</div> */}
               {/* Number */}
-              <div className="font-playfair text-yellow-400 text-xl md:text-2xl">
+              <div className="font-playfair text-theme-accent text-xl md:text-2xl">
                 {index + 1}
               </div>
             </>
@@ -84,9 +83,9 @@ export function Envelope({
           {!isOpened && showValue && (
             <div className="flex flex-col items-center gap-2">
               {/* Ornament */}
-              <div className="text-3xl md:text-5xl mb-2">🧧</div>
+              {/* <div className="text-3xl md:text-5xl mb-2">🏮</div> */}
               {/* Amount */}
-              <div className="font-playfair text-yellow-400 text-sm md:text-base font-bold text-center wrap-break-word px-1">
+              <div className="font-playfair text-theme-accent text-sm md:text-base font-bold text-center wrap-break-word px-1">
                 {formatCurrency(amount)} VNĐ
               </div>
               {/* Difficulty Stars */}
@@ -98,7 +97,7 @@ export function Envelope({
           {isOpened && (
             <div className="flex flex-col items-center gap-2">
               <div className="text-2xl md:text-4xl">✓</div>
-              <div className="font-playfair text-yellow-400 text-lg md:text-xl font-bold text-center wrap-break-word px-1">
+              <div className="font-playfair text-theme-accent text-lg md:text-xl font-bold text-center wrap-break-word px-1">
                 {formatCurrency(amount)} VNĐ
               </div>
             </div>
@@ -108,10 +107,10 @@ export function Envelope({
         {/* Gold border pattern */}
         {!isOpened && (
           <>
-            <div className="absolute top-2 left-2 right-2 h-1 bg-yellow-400 opacity-50 rounded"></div>
-            <div className="absolute bottom-2 left-2 right-2 h-1 bg-yellow-400 opacity-50 rounded"></div>
-            <div className="absolute top-2 bottom-2 left-2 w-1 bg-yellow-400 opacity-50 rounded"></div>
-            <div className="absolute top-2 bottom-2 right-2 w-1 bg-yellow-400 opacity-50 rounded"></div>
+            <div className="absolute top-2 left-2 right-2 h-1 bg-theme-accent opacity-50 rounded"></div>
+            <div className="absolute bottom-2 left-2 right-2 h-1 bg-theme-accent opacity-50 rounded"></div>
+            <div className="absolute top-2 bottom-2 left-2 w-1 bg-theme-accent opacity-50 rounded"></div>
+            <div className="absolute top-2 bottom-2 right-2 w-1 bg-theme-accent opacity-50 rounded"></div>
           </>
         )}
       </div>

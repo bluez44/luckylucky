@@ -8,7 +8,7 @@ interface DecorativeIcon {
 export function generateDecorativeIcons(): DecorativeIcon[] {
   const icons = [
     "🌸",
-    "🧧",
+    "🏮",
     "💰",
     "🎆",
     "🎇",
@@ -63,10 +63,13 @@ export function distributeAmount(
   maxValue?: number,
 ): number[] {
   // Round to nearest multiple of 1000
-  const roundToThousand = (value: number): number => Math.round(value / 1000) * 1000;
+  const roundToThousand = (value: number): number =>
+    Math.round(value / 1000) * 1000;
 
   // Use provided min/max or calculate defaults, rounded to multiples of 1000
-  const min = roundToThousand(minValue || Math.floor(total / packets / 1000) || 1000);
+  const min = roundToThousand(
+    minValue || Math.floor(total / packets / 1000) || 1000,
+  );
   const max = roundToThousand(maxValue || total);
   // Validate that distribution is possible
   if (packets < 2 || packets * min > total || packets * max < total) {

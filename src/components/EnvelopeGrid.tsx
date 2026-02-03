@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { GameState } from "../App";
 import { Envelope } from "./Envelope";
 import gsap from "gsap";
+import MotionPathPlugin from "gsap/MotionPathPlugin";
 
 interface EnvelopeGridProps {
   gameState: GameState;
@@ -10,6 +11,8 @@ interface EnvelopeGridProps {
   onStartGame: () => void;
   wrongEnvelopeIndex?: number;
 }
+
+gsap.registerPlugin(MotionPathPlugin);
 
 export function EnvelopeGrid({
   gameState,
@@ -83,16 +86,8 @@ export function EnvelopeGrid({
       const midY = (Math.random() - 0.5) * 400;
 
       gsap.to(envelopeEl, {
-        x: 0,
-        y: 0,
-        opacity: 1,
-        rotation: 0,
-        scale: 1,
-        duration: 1.2 + Math.random() * 0.8,
-        delay: index * 0.08,
-        ease: "back.out(1.2)",
-        bezier: {
-          values: [
+        motionPath: {
+          path: [
             {
               x: startX - envelopeEl.offsetLeft,
               y: startY - envelopeEl.offsetTop,
@@ -100,8 +95,14 @@ export function EnvelopeGrid({
             { x: midX, y: midY },
             { x: 0, y: 0 },
           ],
-          type: "soft",
+          curviness: 0.1,
         },
+        opacity: 1,
+        rotation: 0,
+        scale: 1,
+        duration: 1.5 + Math.random() * 0.8,
+        delay: index * 0.08,
+        ease: "back.out(1.2)",
       });
     });
   };
@@ -160,12 +161,9 @@ export function EnvelopeGrid({
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-6xl font-playfair text-yellow-400 mb-4 drop-shadow-lg">
-            Bao Nào 'Thơm' Nhất Thì Pick Nhé! 🧧
-          </h1>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-yellow-200 font-montserrat text-lg">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-theme-text-accent-light font-montserrat text-lg">
             <span>
-              Quỹ lộc hiện có:{" "}
+              Quỹ lộc hiện còn:{" "}
               {formatCurrency(
                 gameState.totalFund -
                   Array.from(gameState.openedEnvelopes).reduce(
@@ -175,18 +173,13 @@ export function EnvelopeGrid({
               )}{" "}
               VNĐ
             </span>
-            <span className="hidden md:inline">•</span>
-            <span>
-              Đã 'bay màu': {gameState.openedEnvelopes.size} /{" "}
-              {gameState.numberOfPackets}
-            </span>
           </div>
 
           {/* Progress Bar */}
           <div className="mt-4 max-w-2xl mx-auto">
-            <div className="bg-yellow-200/30 rounded-full h-4 overflow-hidden border-2 border-yellow-400">
+            <div className="bg-theme-accent-light/30 rounded-full h-4 overflow-hidden border-2 border-theme-accent">
               <div
-                className="bg-linear-to-r from-yellow-400 to-yellow-300 h-full transition-all duration-300"
+                className="bg-linear-to-r from-theme-accent to-theme-accent-light h-full transition-all duration-300"
                 style={{
                   width: `${(gameState.openedEnvelopes.size / gameState.numberOfPackets) * 100}%`,
                 }}
@@ -196,7 +189,7 @@ export function EnvelopeGrid({
 
           {/* Streak Counter */}
           {gameState.gameMode === "challenge" && gameState.streak > 0 && (
-            <div className="mt-4 text-2xl font-playfair text-red-300 animate-pulse">
+            <div className="mt-4 text-2xl font-playfair text-theme-error-light animate-pulse">
               🔥 {gameState.streak} Streak! 🔥
             </div>
           )}
@@ -226,7 +219,7 @@ export function EnvelopeGrid({
         {/* Controls */}
         <div className="text-center flex flex-col gap-2 items-center">
           {allOpened && (
-            <div className="mb-6 bg-yellow-400 text-red-800 px-6 py-4 rounded-xl inline-block font-playfair text-2xl shadow-lg">
+            <div className="mb-6 bg-theme-accent text-theme-text-dark px-6 py-4 rounded-xl inline-block font-playfair text-2xl shadow-lg">
               Đã sạch túi! 🔥
             </div>
           )}
@@ -234,14 +227,14 @@ export function EnvelopeGrid({
             <button
               ref={startButtonRef}
               onClick={onStartGame}
-              className="bg-yellow-400 hover:bg-yellow-500 text-red-800 font-montserrat text-xl px-12 py-4 rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition duration-200 border-2 border-red-700 cursor-pointer font-bold"
+              className="bg-theme-accent hover:bg-theme-accent-dark text-theme-text-dark font-montserrat text-xl px-12 py-4 rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition duration-200 border-2 border-theme-envelope-dark cursor-pointer font-bold"
             >
               Bắt Đầu! 🎉
             </button>
           ) : (
             <button
               onClick={onReset}
-              className="bg-white hover:bg-gray-100 text-red-700 font-montserrat text-lg px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-200 border-2 border-yellow-500 cursor-pointer"
+              className="bg-theme-card-bg hover:bg-theme-accent-lighter text-theme-text-primary font-montserrat text-lg px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 hover:text-theme-accent-darker transition duration-200 border-2 border-theme-border-accent cursor-pointer"
             >
               Làm ván mới!
             </button>

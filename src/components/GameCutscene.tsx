@@ -51,7 +51,7 @@ export function GameCutscene({
   }, [onComplete]);
 
   return (
-    <div className="fixed inset-0 bg-linear-to-br from-red-700 via-red-600 to-red-800 z-50 flex flex-col items-center justify-center overflow-hidden">
+    <div className="fixed inset-0 bg-linear-to-br from-theme-bg-primary via-theme-bg-secondary to-theme-bg-dark z-50 flex flex-col items-center justify-center overflow-hidden">
       {/* Animated Envelopes Flying In */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Left side envelopes */}
@@ -66,7 +66,7 @@ export function GameCutscene({
               fontSize: "3rem",
             }}
           >
-            🧧
+            🏮
           </div>
         ))}
 
@@ -82,7 +82,7 @@ export function GameCutscene({
               fontSize: "3rem",
             }}
           >
-            🧧
+            🏮
           </div>
         ))}
       </div>
@@ -92,13 +92,13 @@ export function GameCutscene({
         {/* Welcome Text */}
         {showText && (
           <div className="animate-fade-in-scale mb-12">
-            <h1 className="text-5xl md:text-7xl font-playfair text-yellow-400 mb-4 drop-shadow-lg font-bold">
+            <h1 className="text-5xl md:text-7xl font-playfair text-theme-accent mb-4 drop-shadow-lg font-bold">
               Chào Mừng! 🎉
             </h1>
-            <p className="text-2xl md:text-3xl font-montserrat text-yellow-200 mb-4">
+            <p className="text-2xl md:text-3xl font-montserrat text-theme-accent-light mb-4">
               Bạn sắp phát lì xì cho {numberOfPackets} người!
             </p>
-            <p className="text-xl md:text-2xl font-montserrat text-yellow-100">
+            <p className="text-xl md:text-2xl font-montserrat text-theme-accent-lighter">
               Mọi người đều đợi bạn rồi... 👀
             </p>
           </div>

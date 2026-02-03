@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useMemo, useRef, useState } from "react";
 import { SetupScreen } from "./components/SetupScreen";
 import { EnvelopeGrid } from "./components/EnvelopeGrid";
 import { ResultModal } from "./components/ResultModal";
@@ -13,13 +7,15 @@ import { QuestionModal } from "./components/QuestionModal";
 import { LoadingModal } from "./components/LoadingModal";
 import { GameCutscene } from "./components/GameCutscene";
 import { GameStatsScreen } from "./components/GameStatsScreen";
+import { ThemeToggle } from "./components/ThemeToggle";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import {
   distributeAmount,
   formatDifficultyBasedOnAmount,
   generateDecorativeIcons,
   redistributeUnopened,
 } from "./utils";
-import { generateTetQuestion, questionType, test } from "./service/gemini";
+import { generateTetQuestion, questionType } from "./service/gemini";
 import {
   createInitialStats,
   GameStats,
@@ -48,7 +44,7 @@ export interface GameState {
   longestStreak: number;
 }
 
-export default function App() {
+function AppContent() {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [gameStats, setGameStats] = useState<GameStats>(createInitialStats());
   const [showCutscene, setShowCutscene] = useState(false);
@@ -313,7 +309,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-red-700 via-red-600 to-red-800 relative overflow-hidden">
+    <div className="min-h-screen bg-linear-to-br from-theme-bg-primary via-theme-bg-secondary to-theme-bg-dark relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute inset-0 opacity-40 z-10 pointer-events-none">
         {floatingIcons.map((icon, index) => (
@@ -384,6 +380,11 @@ export default function App() {
         <span className="text-xl">{isMusicOn ? "🔊" : "🔇"}</span>
       </button>
 
+      {/* Theme Toggle Button */}
+      <div className="fixed bottom-4 right-16 z-50">
+        <ThemeToggle />
+      </div>
+
       {/* Loading Modal */}
       {isLoadingQuestion && <LoadingModal />}
 
@@ -415,5 +416,14 @@ export default function App() {
         />
       )}
     </div>
+  );
+}
+
+// Wrap the app with ThemeProvider
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 }

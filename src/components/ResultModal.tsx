@@ -46,34 +46,24 @@ export function ResultModal({ amount, onClose }: ResultModalProps) {
   const quote = getRandomQuote(amount);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-linear-to-br from-red-600 to-red-700 rounded-3xl shadow-2xl max-w-lg w-full p-8 md:p-12 border-8 border-yellow-500 animate-scale-in">
-        {/* Greeting */}
-        <div className="text-center mb-6">
-          <h2 className="text-3xl md:text-4xl font-playfair text-yellow-400 mb-2">
-            🎊 Happy New Year! 🎊
-          </h2>
-          <p className="text-xl text-yellow-200 font-montserrat">
-            Chúc Mừng Năm Mới!
-          </p>
-        </div>
-
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-theme-modal-overlay-dark backdrop-blur-sm animate-fade-in">
+      <div className="bg-linear-to-br from-theme-envelope to-theme-envelope-dark rounded-3xl shadow-2xl max-w-lg w-full p-8 md:p-12 border-8 border-theme-border-accent animate-scale-in">
         {/* Amount Display */}
-        <div className="bg-white/95 rounded-2xl p-8 mb-6 text-center shadow-inner">
-          <p className="text-lg md:text-xl text-red-700 font-montserrat mb-2">
+        <div className="bg-theme-modal-bg rounded-2xl p-8 mb-6 text-center shadow-inner">
+          <p className="text-lg md:text-xl text-theme-text-primary font-montserrat mb-2">
             Tài khoản đã 'nổ':
           </p>
-          <p className="text-5xl md:text-7xl font-playfair text-transparent bg-clip-text bg-linear-to-r from-yellow-500 to-yellow-600 mb-2">
+          <p className="text-5xl md:text-7xl font-playfair text-transparent bg-clip-text bg-linear-to-r from-theme-accent-dark to-theme-accent-darker mb-2">
             {formatCurrency(amount)}
           </p>
-          <p className="text-2xl md:text-3xl font-montserrat text-red-700">
+          <p className="text-2xl md:text-3xl font-montserrat text-theme-text-primary">
             VNĐ
           </p>
         </div>
 
         {/* Quote */}
-        <div className="bg-yellow-400 rounded-xl p-4 mb-6 text-center">
-          <p className="text-lg md:text-xl font-montserrat text-red-800">
+        <div className="bg-theme-accent rounded-xl p-4 mb-6 text-center">
+          <p className="text-lg md:text-xl font-montserrat text-theme-text-primary">
             {quote.emoji} {quote.text}
           </p>
         </div>
@@ -81,7 +71,7 @@ export function ResultModal({ amount, onClose }: ResultModalProps) {
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="w-full bg-white hover:bg-yellow-100 text-red-700 font-montserrat text-xl py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-200 border-2 border-yellow-500 cursor-pointer"
+          className="w-full bg-theme-card-bg hover:bg-theme-accent-lighter text-theme-text-primary font-montserrat text-xl py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-200 border-2 border-theme-border-accent cursor-pointer"
         >
           Bóc tiếp
         </button>

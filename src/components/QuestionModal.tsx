@@ -11,7 +11,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
   onAnswer,
 }) => {
   const [selectedChoice, setSelectedChoice] = React.useState<number | null>(
-    null
+    null,
   );
   const [showResult, setShowResult] = React.useState(false);
   const [showConfirmation, setShowConfirmation] = React.useState(false);
@@ -42,19 +42,19 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-linear-to-br from-red-50 to-orange-50 rounded-2xl shadow-2xl p-8 max-w-2xl w-full mx-4 border-4 border-yellow-400">
+    <div className="fixed inset-0 z-100 flex items-center justify-center bg-theme-modal-overlay backdrop-blur-sm">
+      <div className="bg-theme-card-bg rounded-2xl shadow-2xl p-8 max-w-2xl w-full mx-4 border-4 border-theme-accent">
         {/* Header */}
         <div className="text-center mb-6">
-          <h2 className="text-3xl font-bold text-red-800 mb-2 uppercase">
-            🧧 🤔 Check não đầu xuân 🤔 🧧
+          <h2 className="text-3xl font-bold text-theme-text-dark mb-2 uppercase">
+            🏮 🤔 Check não đầu xuân 🤔 🏮
           </h2>
-          <p className="text-gray-600">Não có nảy được số này không?</p>
+          <p className="text-theme-text-body">Não có nảy được số này không?</p>
         </div>
 
         {/* Question */}
-        <div className="bg-white rounded-xl p-6 mb-6 shadow-md border-2 border-yellow-300">
-          <p className="text-xl font-semibold text-gray-800">
+        <div className="bg-theme-card-bg rounded-xl p-6 mb-6 shadow-md border-2 border-theme-accent">
+          <p className="text-xl font-semibold text-theme-text-heading">
             {question.question}
           </p>
         </div>
@@ -70,23 +70,23 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
                 selectedChoice === index
                   ? showResult
                     ? index === question.correctAnswer
-                      ? "bg-green-100 border-green-500 text-green-800"
-                      : "bg-red-100 border-red-500 text-red-800"
-                    : "bg-yellow-100 border-yellow-500 text-gray-800"
+                      ? "bg-theme-card-bg-success border-theme-card-border-success text-theme-text-success"
+                      : "bg-theme-error-light border-theme-error text-theme-text-primary"
+                    : "bg-theme-accent-lighter border-theme-accent-dark text-theme-text-heading"
                   : showResult && index === question.correctAnswer
-                  ? "bg-green-50 border-green-400 text-green-800"
-                  : "bg-white border-gray-300 hover:border-yellow-400 hover:bg-yellow-50"
+                    ? "bg-theme-card-bg-success border-theme-card-border-success text-theme-text-success"
+                    : "bg-theme-card-bg border-theme-input-border hover:border-theme-accent hover:bg-theme-accent-lighter"
               } ${showResult ? "cursor-not-allowed" : "cursor-pointer"}`}
             >
               <div className="flex items-center">
                 <span className="text-lg font-medium">{choice}</span>
                 {showResult && index === question.correctAnswer && (
-                  <span className="ml-auto text-green-600">✓</span>
+                  <span className="ml-auto text-theme-success">✓</span>
                 )}
                 {showResult &&
                   selectedChoice === index &&
                   index !== question.correctAnswer && (
-                    <span className="ml-auto text-red-600">✗</span>
+                    <span className="ml-auto text-theme-error">✗</span>
                   )}
               </div>
             </button>
@@ -100,8 +100,8 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
             disabled={selectedChoice === null}
             className={`w-full py-4 rounded-lg font-bold text-lg transition-all cursor-pointer ${
               selectedChoice === null
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-linear-to-r from-red-600 to-orange-600 text-white hover:from-red-700 hover:to-orange-700 shadow-lg"
+                ? "bg-theme-input-border text-theme-text-muted cursor-not-allowed"
+                : "bg-linear-to-r from-theme-envelope to-theme-celebration-orange text-white hover:from-theme-envelope-dark hover:to-theme-celebration-red shadow-lg"
             }`}
           >
             Trả lời
@@ -113,8 +113,8 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
           <div
             className={`text-center p-4 rounded-lg font-bold text-lg ${
               selectedChoice === question.correctAnswer
-                ? "bg-green-100 text-green-800"
-                : "bg-red-100 text-red-800"
+                ? "bg-theme-card-bg-success text-theme-text-success"
+                : "bg-theme-error-light text-theme-text-primary"
             }`}
           >
             {selectedChoice === question.correctAnswer
@@ -126,16 +126,16 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
 
       {/* Confirmation Modal */}
       {showConfirmation && (
-        <div className="fixed inset-0 z-110 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full mx-4 border-2 border-yellow-400">
+        <div className="fixed inset-0 z-110 flex items-center justify-center bg-theme-modal-overlay-dark backdrop-blur-sm">
+          <div className="bg-theme-card-bg rounded-xl shadow-2xl p-6 max-w-sm w-full mx-4 border-2 border-theme-accent">
             <div className="text-center mb-6">
               <div className="text-4xl mb-3">🤔</div>
-              <h3 className="text-xl font-bold text-gray-800 mb-2">
+              <h3 className="text-xl font-bold text-theme-text-heading mb-2">
                 Chắc chưa?
               </h3>
-              <p className="text-gray-600">
+              <p className="text-theme-text-body">
                 Đã chọn đáp án:{" "}
-                <span className="font-semibold text-red-600">
+                <span className="font-semibold text-theme-envelope">
                   {question.choices[selectedChoice!]}
                 </span>
               </p>
@@ -143,13 +143,13 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
             <div className="flex gap-3">
               <button
                 onClick={handleCancel}
-                className="flex-1 py-3 rounded-lg font-semibold text-gray-700 bg-gray-200 hover:bg-gray-300 transition cursor-pointer"
+                className="flex-1 py-3 rounded-lg font-semibold text-theme-text-secondary bg-theme-input-border hover:bg-theme-text-muted transition cursor-pointer"
               >
                 Đổi ý
               </button>
               <button
                 onClick={handleConfirm}
-                className="flex-1 py-3 rounded-lg font-semibold text-white bg-linear-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 transition shadow-lg cursor-pointer"
+                className="flex-1 py-3 rounded-lg font-semibold text-white bg-linear-to-r from-theme-envelope to-theme-celebration-orange hover:from-theme-envelope-dark hover:to-theme-celebration-red transition shadow-lg cursor-pointer"
               >
                 Chốt luôn! 🎯
               </button>
