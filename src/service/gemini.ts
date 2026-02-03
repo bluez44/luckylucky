@@ -19,7 +19,7 @@ export type questionType = {
 };
 
 export const generateTetQuestion = async (
-  questionLevel: string
+  questionLevel: string,
 ): Promise<{
   question: string;
   choices: string[];
@@ -27,14 +27,15 @@ export const generateTetQuestion = async (
 }> => {
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash",
-    contents: `You are a quiz generator for Vietnamese Tet (Lunar New Year) holiday questions. Generate questions in Vietnamese about Tet traditions, customs, food, decorations, and cultural practices. Return ONLY a valid JSON text object with this exact structure:
+    contents: `You are a quiz generator for Vietnamese holiday questions. Generate questions in Vietnamese about anything you want but remember to respect culture, history and traditions. Return ONLY a valid JSON text object with this exact structure:
     "{
       "question": "the question text",
       "choices": ["A: answer A", "B: answer B", "C: answer C", "D: answer D"],
       "correctAnswer": 0
     }"
     Where correctAnswer is the index (0-3) of the correct choice in the choices array. 
-    Do not include any other text in the response. The difficulty level should be ${questionLevel}.
+    ** Do not include any other text in the response. The difficulty level should be ${questionLevel}.
+    ** Do not remember the history of the conversation.
     `,
   });
 

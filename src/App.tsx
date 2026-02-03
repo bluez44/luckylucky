@@ -136,9 +136,6 @@ function AppContent() {
         const quizPromise: questionType =
           await generateTetQuestion(questionLevel);
 
-        console.log("Question level:", questionLevel);
-        console.log("Quiz promise:", quizPromise);
-
         // Show the question modal instead of opening envelope immediately
         setCurrentQuestion({
           question: quizPromise,
@@ -372,17 +369,16 @@ function AppContent() {
       <audio ref={audioRef} src={bgMusic} preload="auto" className="hidden" />
 
       {/* Music Toggle Button */}
-      <button
-        onClick={toggleMusic}
-        aria-label={isMusicOn ? "Turn off music" : "Turn on music"}
-        className="fixed bottom-4 right-4 z-50 hover:cursor-pointer bg-transparent hover:bg-white/30 text-white border border-white/30 backdrop-blur-md rounded-full px-2 py-2 shadow-lg transition flex items-center gap-2"
-      >
-        <span className="text-xl">{isMusicOn ? "🔊" : "🔇"}</span>
-      </button>
-
-      {/* Theme Toggle Button */}
-      <div className="fixed bottom-4 right-16 z-50">
+      <div className="fixed bottom-4 right-4 z-50 flex gap-4">
         <ThemeToggle />
+
+        <button
+          onClick={toggleMusic}
+          aria-label={isMusicOn ? "Turn off music" : "Turn on music"}
+          className="hover:cursor-pointer bg-transparent hover:bg-white/30 text-white border border-white/30 backdrop-blur-md rounded-full px-2 py-2 shadow-lg transition flex items-center gap-2"
+        >
+          <span className="text-xl">{isMusicOn ? "🔊" : "🔇"}</span>
+        </button>
       </div>
 
       {/* Loading Modal */}

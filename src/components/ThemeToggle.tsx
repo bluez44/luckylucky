@@ -17,7 +17,7 @@ export function ThemeToggle({
     return (
       <button
         onClick={toggleTheme}
-        className={`p-2 rounded-lg bg-theme-modal-bg hover:bg-theme-accent/20 
+        className={`p-2 rounded-lg bg-theme-modal-bg hover:bg-theme-accent/20 hover:cursor-pointer
           border border-theme-border-accent/50 transition-all duration-200
           text-theme-text-primary hover:text-theme-accent ${className}`}
         aria-label="Toggle theme"

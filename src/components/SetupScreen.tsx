@@ -241,7 +241,7 @@ export function SetupScreen({ onCreateEnvelopes }: SetupScreenProps) {
 
         {/* Footer */}
         <p className="text-center text-theme-accent-light mt-6 font-montserrat">
-          Bóc Lì Xì Đê
+          Bóc Lì Xì Đê{" "}
         </p>
       </div>
     </div>

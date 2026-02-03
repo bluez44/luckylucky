@@ -79,7 +79,7 @@ export const QuestionModal: React.FC<QuestionModalProps> = ({
               } ${showResult ? "cursor-not-allowed" : "cursor-pointer"}`}
             >
               <div className="flex items-center">
-                <span className="text-lg font-medium">{choice}</span>
+                <span className="text-lg font-medium text-theme-accent-dark hover:text-theme-accent-darker">{choice}</span>
                 {showResult && index === question.correctAnswer && (
                   <span className="ml-auto text-theme-success">✓</span>
                 )}
